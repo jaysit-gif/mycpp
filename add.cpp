@@ -6,8 +6,11 @@ double add(double a,double b){
 }
 
 int main(void){
-    double a = add(3,2);
-    cout<<add(4,3)<<endl;
-    cout<<add(a,5)<<endl;
+    double a,b;
+    cout<<"A: ";
+    cin>>a;
+    cout<<"B: ";
+    cin>>b;
+    cout<<add(a,b)<<endl;
     return 0;
 }
