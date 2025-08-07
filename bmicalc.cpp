@@ -45,7 +45,7 @@ weight maxhealthyweight(double height){
     return t;
 }
 /**hows the new version?? */
-int main(void){
+void program(void){
     double w,z;
     string s,s1;
     cout<<"unit of weight: ";
@@ -60,12 +60,22 @@ int main(void){
     z = converter(z,s1);
     if(w == -1||z == -1){
         cout<<"invalid conversion units"<<endl;
-        return 1;
     }
     putBMI(w,z);
     weight t = maxhealthyweight(z);
     cout<<"MAX HEALTHY WEIGHT AT YOUR HEIGHT: "<<t.max<<endl<<"MIN HEALTHY WEIGHT AT YOUR HEIGHT: "<<t.min<<endl;
-    return 0;
+}
+
+int main(void){
+    while(1){
+        char q;
+        program();
+        cout<<"do you wish to quit(y/n)?? ";
+        cin>>q;
+        if(q == 'y'){
+            return 0;
+        }
+    }
 }
 
 double converter(double x,string s){
