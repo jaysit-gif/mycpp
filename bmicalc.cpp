@@ -2,6 +2,12 @@
 #include <string>
 using namespace std;
 
+struct weight{
+    double min;
+    double max;
+};
+
+
 double converter(double x,string s);
 
 double BMI(double weight,double height){
@@ -32,8 +38,11 @@ void putBMI(double weight,double height){
     }
 }
 
-double maxhealthyweight(double height){
-    return 25*height*height;
+weight maxhealthyweight(double height){
+    weight t;
+    t.min = 18.5*height*height;
+    t.max = 25*height*height;
+    return t;
 }
 /**hows the new version?? */
 int main(void){
@@ -54,7 +63,8 @@ int main(void){
         return 1;
     }
     putBMI(w,z);
-    cout<<"MAX HEALTHY WEIGHT AT YOUR HEIGHT "<<maxhealthyweight(z);
+    weight t = maxhealthyweight(z);
+    cout<<"MAX HEALTHY WEIGHT AT YOUR HEIGHT: "<<t.max<<endl<<"MIN HEALTHY WEIGHT AT YOUR HEIGHT: "<<t.min<<endl;
     return 0;
 }
 
