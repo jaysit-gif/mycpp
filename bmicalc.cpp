@@ -49,7 +49,7 @@ int main(void){
     cin>>z;
     w = converter(w,s);
     z = converter(z,s1);
-    if(w == 1||z == 1){
+    if(w == -1||z == -1){
         cout<<"invalid conversion units"<<endl;
         return 1;
     }
@@ -65,9 +65,11 @@ double converter(double x,string s){
     return x/1000;
    }else if(s == "pound"){
     return 0.45359*x;
-   }else if(s == "meter"||s == "kg"||s == "metre"){ //program recognizes both meter and metre
+   }else if(s == "kg"||s == "metre"){ //program recognizes both meter and metre
+    return x;
+   }else if(s == "meter"){
     return x;
    }else{
-    return 1;
+    return -1;
    }
 }
