@@ -7,14 +7,13 @@ struct weight{
     double max;
 };
 
-
 double converter(double x,string s);
 
 double BMI(double weight,double height){
-    if(height <= 0||weight <= 0){ //error handling for zero value
+    if(height <= 0||weight <= 0){ 
         return -1;
     }
-    return weight/(height*height);/**did it for faster calculation */
+    return weight/(height*height);
 
 }
 
@@ -44,7 +43,7 @@ weight maxhealthyweight(double height){
     t.max = 25*height*height;
     return t;
 }
-/**hows the new version?? */
+
 void program(void){
     double w,z;
     string s,s1;
@@ -57,6 +56,7 @@ void program(void){
     cout<<"HEIGHT: ";
     cin>>z;
     w = converter(w,s);
+    if(z > 0){
     z = converter(z,s1);
     if(w == -1||z == -1){
         cout<<"invalid conversion units"<<endl;
@@ -64,6 +64,9 @@ void program(void){
     putBMI(w,z);
     weight t = maxhealthyweight(z);
     cout<<"MAX HEALTHY WEIGHT AT YOUR HEIGHT: "<<t.max<<endl<<"MIN HEALTHY WEIGHT AT YOUR HEIGHT: "<<t.min<<endl;
+    }else{
+        cout<<"INVALID HEIGHT"<<endl;
+    }
 }
 
 int main(void){
@@ -85,7 +88,7 @@ double converter(double x,string s){
     return x/1000;
    }else if(s == "pound"){
     return 0.45359*x;
-   }else if(s == "kg"||s == "metre"){ //program recognizes both meter and metre
+   }else if(s == "kg"||s == "metre"){ 
     return x;
    }else if(s == "meter"){
     return x;
