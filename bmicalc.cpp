@@ -1,98 +1,146 @@
 #include <iostream>
 #include <string>
+#include <iomanip>
+#include <algorithm>
+#include <limits>
+
 using namespace std;
 
-struct weight{
-    double min;
-    double max;
+const double POUND_TO_KG = 0.453592;
+const double GRAM_TO_KG = 0.001;
+const double CM_TO_M = 0.01;
+const double FEET_TO_M = 0.3048;
+const double BMI_UNDERWEIGHT = 18.5;
+const double BMI_NORMAL_MAX = 25.0;
+
+struct Measurement {
+    double height; // in meters
+    double weight; // in kg
 };
 
-double converter(double x,string s);
-
-double BMI(double weight,double height){
-    if(height <= 0||weight <= 0){ 
-        return -1;
-    }
-    return weight/(height*height);
-
+string toLowerCase(const string& s) {
+    string result = s;
+    transform(result.begin(), result.end(), result.begin(), ::tolower);
+    return result;
 }
 
-void putBMI(double weight,double height){
-    double bmi = BMI(weight,height);
-    if(bmi==-1){
-        cout<<"INVALID INPUT"<<endl;
+double convertweight(double x, string s) {
+    s = toLowerCase(s);
+    if (s == "pound") return POUND_TO_KG * x;
+    if (s == "gram") return GRAM_TO_KG * x;
+    if (s == "kg") return x;
+    return -1;
+}
+
+double convertheight(double x, string s) {
+    s = toLowerCase(s);
+    if (s == "cm") return CM_TO_M * x;
+    if (s == "feet") return FEET_TO_M * x;
+    if (s == "metre" || s == "meter" || s == "m") return x;
+    return -1;
+}
+
+Measurement convert(double height, double weight, string heightUnit, string weightUnit) {
+    Measurement t;
+    t.height = convertheight(height, heightUnit);
+    t.weight = convertweight(weight, weightUnit);
+    return t;
+}
+
+double BMI(double weight, double height) {
+    if (height <= 0 || weight <= 0) {
+        return -1;
     }
-    else if (bmi < 18.5) {
-        cout<<"BMI: "<<bmi<<endl;
+    return weight / (height * height);
+}
+
+void putBMI(double bmi) {
+    cout << fixed << setprecision(3);
+    if (bmi == -1) {
+        cout << "INVALID INPUT" << endl;
+    } else if (bmi < BMI_UNDERWEIGHT) {
+        cout << "BMI: " << bmi << endl;
         cout << "Category: Underweight" << endl;
-    } else if (bmi >= 18.5 && bmi < 25) {
-        cout<<"BMI: "<<bmi<<endl;
+    } else if (bmi < BMI_NORMAL_MAX) {
+        cout << "BMI: " << bmi << endl;
         cout << "Category: Normal weight" << endl;
-    } else if (bmi >= 25 && bmi < 30) {
-        cout<<"BMI: "<<bmi<<endl;
+    } else if (bmi < 30) {
+        cout << "BMI: " << bmi << endl;
         cout << "Category: Overweight" << endl;
     } else {
-        cout<<"BMI: "<<bmi<<endl;
+        cout << "BMI: " << bmi << endl;
         cout << "Category: Obese" << endl;
     }
 }
 
-weight maxhealthyweight(double height){
-    weight t;
-    t.min = 18.5*height*height;
-    t.max = 25*height*height;
+Measurement healthyweight(double height) {
+    Measurement t;
+    t.height = BMI_UNDERWEIGHT * height * height; // min weight
+    t.weight = BMI_NORMAL_MAX * height * height;  // max weight
     return t;
 }
 
-void program(void){
-    double w,z;
-    string s,s1;
-    cout<<"unit of weight: ";
-    cin>>s;
-    cout<<"WEIGHT: ";
-    cin>>w;
-    cout<<"unit of height: ";
-    cin>>s1;
-    cout<<"HEIGHT: ";
-    cin>>z;
-    w = converter(w,s);
-    if(z > 0){
-    z = converter(z,s1);
-    if(w == -1||z == -1){
-        cout<<"invalid conversion units"<<endl;
+double getValidNumber(const string& prompt) {
+    double value;
+    cout << prompt;
+    while (!(cin >> value)) {
+        cout << "Invalid input. Please enter a number: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
-    putBMI(w,z);
-    weight t = maxhealthyweight(z);
-    cout<<"MAX HEALTHY WEIGHT AT YOUR HEIGHT: "<<t.max<<endl<<"MIN HEALTHY WEIGHT AT YOUR HEIGHT: "<<t.min<<endl;
-    }else{
-        cout<<"INVALID HEIGHT"<<endl;
+    return value;
+}
+
+Measurement input(void) {
+    double weight = getValidNumber("WEIGHT (kg, pound, gram): ");
+    string weightUnit;
+    cin >> weightUnit;
+    double height = getValidNumber("HEIGHT (meter, cm, feet): ");
+    string heightUnit;
+    cin >> heightUnit;
+    if (height <= 0 || weight <= 0) {
+        Measurement t = {-1, -1};
+        return t;
+    }
+    return convert(height, weight, heightUnit, weightUnit);
+}
+
+char getQuitChoice() {
+    char q;
+    cout << "Do you wish to quit (y/n)? ";
+    cin >> q;
+    while (q != 'y' && q != 'n') {
+        cout << "Please enter 'y' or 'n': ";
+        cin >> q;
+    }
+    return q;
+}
+
+void program(void) {
+    Measurement t = input();
+    if (t.height == -1 || t.weight == -1) {
+        if (t.height == -1) {
+            cout << "INVALID HEIGHT or HEIGHT UNITS" << endl;
+        }
+        if (t.weight == -1) {
+            cout << "INVALID WEIGHT or WEIGHT UNITS" << endl;
+        }
+        return;
+    }
+    double bmi = BMI(t.weight, t.height);
+    putBMI(bmi);
+    if (bmi != -1) {
+        Measurement a = healthyweight(t.height);
+        cout << "MAXIMUM HEALTHY WEIGHT AT YOUR HEIGHT: " << a.weight << " kg" << endl;
+        cout << "MINIMUM HEALTHY WEIGHT AT YOUR HEIGHT: " << a.height << " kg" << endl;
     }
 }
 
-int main(void){
-    while(1){
-        char q;
+int main(void) {
+    while (true) {
         program();
-        cout<<"do you wish to quit(y/n)?? ";
-        cin>>q;
-        if(q == 'y'){
+        if (getQuitChoice() == 'y') {
             return 0;
         }
     }
-}
-
-double converter(double x,string s){
-   if(s == "cm"){
-    return x/100;
-   }else if(s == "gram"){
-    return x/1000;
-   }else if(s == "pound"){
-    return 0.45359*x;
-   }else if(s == "kg"||s == "metre"){ 
-    return x;
-   }else if(s == "meter"){
-    return x;
-   }else{
-    return -1;
-   }
 }
