@@ -7,22 +7,12 @@ using namespace std;
 void win(void){
     cout<<"YOU WIN"<<endl;
 }
-char getQuitChoice() {
-    char q;
-    cout << "Do you wish to quit (y/n)? ";
-    cin >> q;
-    while (q != 'y' && q != 'n') {
-        cout << "Please enter 'y' or 'n': ";
-        cin >> q;
-    }
-    return q;
-}
 void usermanual(void);
 void gamelogic(char a,char z);
 char input(void);
 char inputvalidator(char a);
 char computerplayer(void);
-/**how is v0.2 */
+/**how is v0.2.1 */
 int main(void){
     char a;
     char c;
@@ -30,17 +20,12 @@ int main(void){
     while(1){
         a = input();      
         if(a == 't'){
-            cout<<"ERROR"<<endl;
-            break;
+            cout<<"THANKS FOR PLAYING!!!"<<endl;
+            return 0;
         }
         c = computerplayer();
         gamelogic(a,c);
-        if(getQuitChoice() == 'y'){
-            break;
-        }
     }
-
-    return 0;
 }
 
 void gamelogic(char a,char z){
@@ -71,7 +56,7 @@ char input(void){
 }
 
 void usermanual(void){
-    string z = "WELCOME\nFOR ROCK PRESS R\nFOR SCISSORS PRESS S\nFOR PAPER PRESS P\n";
+    string z = "WELCOME\nFOR ROCK PRESS R\nFOR SCISSORS PRESS S\nFOR PAPER PRESS P\nTO EXIT PRESS ANY OTHER KEY";
     cout<<z<<endl;
 }
 
