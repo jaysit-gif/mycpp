@@ -4,18 +4,26 @@
 #include <string>
 using namespace std;
 
-void win(void){
-    cout<<"YOU WIN"<<endl;
+void printresult(int a){
+    if (a == 1){
+        cout<<"YOU WIN"<<endl;
+    }else if(a == 2){
+        cout<<"DRAW"<<endl;
+    }else{
+        cout<<"YOU LOOSE"<<endl;
+    } 
 }
 void usermanual(void);
-void gamelogic(char a,char z);
+int gamelogic(char a,char z);
 char input(void);
 char inputvalidator(char a);
 char computerplayer(void);
-/**how is v0.2.1 */
+
+/**how is v0.2.2 */
 int main(void){
     char a;
     char c;
+    int s;
     usermanual();
     while(1){
         a = input();      
@@ -24,22 +32,23 @@ int main(void){
             return 0;
         }
         c = computerplayer();
-        gamelogic(a,c);
+        cout<<"computers turn: "<<c<<endl;
+        s = gamelogic(a,c);
+        printresult(s);
     }
 }
 
-void gamelogic(char a,char z){
-    cout<<"computers turn: "<<z<<endl;
+int gamelogic(char a,char z){
     if(a == 'P'&& z == 'R'){
-        win();
+        return 1;
     }else if(a == 'R' && z == 'S'){
-        win();
+        return 1;
     }else if(a == 'S'&& z == 'P'){
-        win();
+        return 1;
     }else if(a == z){
-        cout<<"DRAW"<<endl;
+        return 2;
     }else{
-        cout<<"YOU LOSE"<<endl;
+        return 0;
     }
 }
 
